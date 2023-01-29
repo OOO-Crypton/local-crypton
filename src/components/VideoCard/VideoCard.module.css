@@ -1,0 +1,29 @@
+.VideoCard {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.head,
+.item {
+	display: grid;
+	grid-auto-columns: calc(15%);
+	justify-content: space-between;
+	grid-auto-flow: column;
+	margin: 5px 10px;
+	padding: 10px;
+	min-width: 650px;
+}
+
+.item {
+	border: 2px solid #ccc;
+	border-radius: 10px;
+}
+
+.work {
+	color: green;
+}
+
+.noWork {
+	color: red;
+}

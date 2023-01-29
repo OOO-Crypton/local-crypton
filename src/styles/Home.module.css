@@ -1,0 +1,9 @@
+.homeConteiner {
+	padding: 15px;
+	display: flex;
+	flex-direction: column;
+}
+
+.info {
+	margin-bottom: 50px;
+}
