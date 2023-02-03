@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+// import axios from "axios";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { io } from "socket.io-client";
 import { Button, Input, P } from "../components";
@@ -12,37 +12,26 @@ enum statusEnum {
 	login = "login",
 }
 
-// const socket = io("http://185.230.143.73:3334");
+const socket = io("http://localhost:8080");
 
 export const Start = (): JSX.Element => {
 	const { setAuth } = useContext(AppContext);
 	const [isStart, setIsStart] = useState<boolean>(false);
 	const [status, setStatus] = useState<statusEnum>(statusEnum.default);
 	const [statusText, setStatusText] = useState<string>("Обновление системы");
-	const [messages, setMessages] = useState([
-		{
-			text: "test1 ",
-			name: "test 1",
-		},
-		{
-			text: "test 2",
-			name: "test 2",
-		},
-	]);
 
-	// useEffect(function () {
-	// 	socket.on("connect", () => {
-	// 		console.log(socket);
-	// 	});
-	// }, []);
-
-	useEffect(() => {
-		if (status === statusEnum.update) {
-			setTimeout(() => {
+	const start = () => {
+		setIsStart(!isStart);
+		socket.emit("my_message", "start");
+		socket.on("my_message", (data: any) => {
+			console.log(data);
+			if (data !== "tar update done") {
+				setStatusText(data);
+			} else {
 				setStatus(statusEnum.login);
-			}, 10000);
-		}
-	}, [isStart]);
+			}
+		});
+	};
 
 	const { register, handleSubmit } = useForm({
 		mode: "all",
@@ -61,15 +50,14 @@ export const Start = (): JSX.Element => {
 			<div className={styles.info}>
 				<P size="m">Для начала работы необходимо произвести первичную настройку системы.</P>
 				{status === statusEnum.default && <P size="s">Что бы начать настройку нажмите на кнопку</P>}
-				{status === statusEnum.update && <P size="s">Ожидайте обновление вашей фермы</P>}
+				{status === statusEnum.update && <P size="s">Ожидайте обновление вашей системы</P>}
 				{status === statusEnum.login && <P size="s">Необходимо зарегистрировать вашу ферму в системе</P>}
 			</div>
 			{!isStart && (
 				<Button
 					appearance="green"
 					onClick={() => {
-						setIsStart(!isStart);
-						setStatus(statusEnum.update);
+						start();
 					}}
 				>
 					Начать
